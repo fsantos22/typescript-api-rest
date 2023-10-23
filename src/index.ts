@@ -4,10 +4,10 @@ import { Request, Response } from "express"
 import { MongoGetUsersRepository } from "./repositories/get-users/mongo-get-users"
 import { GetUsersController } from "./controllers/get-users/get-users"
 import { MongoClient } from "./database/mongo"
-import { MongoCreateUserRepository } from "./repositories/create-users/mongo-create-user"
-import { CreateUserController } from "./controllers/create-users/create-users"
-import { MongoUpdateUserRepository } from "./repositories/update-users/mongo-update-users"
-import { UpdateUserController } from "./controllers/update-users/update-users"
+import { MongoCreateUserRepository } from "./repositories/create-user/mongo-create-user"
+import { CreateUserController } from "./controllers/create-user/create-user"
+import { MongoUpdateUserRepository } from "./repositories/update-user/mongo-update-user"
+import { UpdateUserController } from "./controllers/update-user/update-user"
 
 const main = async () => {
   config()
