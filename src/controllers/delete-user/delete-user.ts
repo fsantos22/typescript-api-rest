@@ -1,10 +1,31 @@
 import { User } from "@/models/user"
-import { HttpResponse } from "../protocols"
+import { HttpRequest, HttpResponse } from "../protocols"
+import { IDeleteUserController, IDeleteUserRepository } from "./protocols"
 
-export interface IGetUsersController {
-  handle(): Promise<HttpResponse<User[]>>
-}
+export class DeleteUserController implements IDeleteUserController {
+  constructor(private readonly deleteUserRepository: IDeleteUserRepository) {}
+  async handle(httpRequest: HttpRequest<any>): Promise<HttpResponse<User>> {
+    try {
+      const id = httpRequest?.params?.id
 
-export interface IGetUsersRepository {
-  getUsers(): Promise<User[]>
+      if (!id) {
+        return {
+          statusCode: 400,
+          body: "Missing user id",
+        }
+      }
+
+      const user = await this.deleteUserRepository.deleteUser(id)
+
+      return {
+        statusCode: 200,
+        body: user,
+      }
+    } catch (error) {
+      return {
+        statusCode: 500,
+        body: "something went wrong",
+      }
+    }
+  }
 }
