@@ -1,6 +1,6 @@
 export interface HttpResponse<T> {
-  statusCode: number
-  body: T | string
+  statusCode: HttpStatusCode
+  body: T
 }
 
 export interface HttpRequest<B> {
@@ -9,6 +9,13 @@ export interface HttpRequest<B> {
   body?: B
 }
 
+export enum HttpStatusCode {
+  OK = 200,
+  CREATED = 201,
+  BAD_REQUEST = 400,
+  SERVER_ERROR = 500,
+}
+
 export interface IController {
-handle(httpRequest: HttpRequest<unknown>): Promise<HttpResponse<unknown>>
+  handle(httpRequest: HttpRequest<unknown>): Promise<HttpResponse<unknown>>
 }

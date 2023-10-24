@@ -1,17 +1,15 @@
 import { User } from "@/models/user"
 import { HttpRequest, HttpResponse, IController } from "../protocols"
-import {
-  CreateUserParams,
-  ICreateUserRepository,
-} from "./protocols"
+import { CreateUserParams, ICreateUserRepository } from "./protocols"
 import validator from "validator"
+import { badRequest, created, serverError } from "../helpers"
 
 export class CreateUserController implements IController {
   constructor(private readonly createUserRepository: ICreateUserRepository) {}
 
   async handle(
     httpRequest: HttpRequest<CreateUserParams>,
-  ): Promise<HttpResponse<User>> {
+  ): Promise<HttpResponse<User | string>> {
     const { body } = httpRequest
     try {
       const requiredFields = ["firstName", "lastName", "email", "password"]
@@ -28,28 +26,16 @@ export class CreateUserController implements IController {
       const emailIsValid = validator.isEmail(body!.email)
 
       if (!emailIsValid) {
-        return {
-          statusCode: 400,
-          body: "E-mail is missing",
-        }
+        return badRequest("E-mail is invalid")
       }
 
       if (!body) {
-        return {
-          statusCode: 400,
-          body: "Please, specify a body",
-        }
+        return badRequest("Please, specify a body")
       }
       const user = await this.createUserRepository.createUser(body!)
-      return {
-        statusCode: 201,
-        body: user,
-      }
+      return created<User>(user)
     } catch (error) {
-      return {
-        statusCode: 500,
-        body: "Something went wrong",
-      }
+      return serverError()
     }
   }
 }
