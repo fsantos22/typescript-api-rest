@@ -3,6 +3,7 @@ import { MongoClient } from "@/database/mongo"
 import { User } from "@/models/user"
 import { ObjectId } from "mongodb"
 import { MongoUser } from "../mongo-protocols"
+import { replaceMongoId } from "../helpers"
 
 export class MongoDeleteUserRepository implements IDeleteUserRepository {
   async deleteUser(id: string): Promise<User> {
@@ -22,8 +23,6 @@ export class MongoDeleteUserRepository implements IDeleteUserRepository {
       throw new Error("user not deleted")
     }
 
-    const { _id, ...rest } = user
-
-    return { id: _id.toHexString(), ...rest }
+    return replaceMongoId(user)
   }
 }

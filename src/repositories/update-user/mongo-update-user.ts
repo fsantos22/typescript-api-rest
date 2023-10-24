@@ -6,6 +6,7 @@ import { MongoClient } from "@/database/mongo"
 import { User } from "@/models/user"
 import { ObjectId } from "mongodb"
 import { MongoUser } from "../mongo-protocols"
+import { replaceMongoId } from "../helpers"
 
 export class MongoUpdateUserRepository implements IUpdateUserRepository {
   async updateUser(id: string, params: UpdateUserParams): Promise<User> {
@@ -23,7 +24,6 @@ export class MongoUpdateUserRepository implements IUpdateUserRepository {
       throw new Error("user not updated")
     }
 
-    const { _id, ...rest } = user
-    return { id: _id.toHexString(), ...rest }
+    return replaceMongoId(user)
   }
 }
