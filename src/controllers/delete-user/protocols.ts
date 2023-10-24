@@ -1,10 +1,5 @@
-import { User } from "@/models/user";
-import { HttpRequest, HttpResponse } from "../protocols";
-
-export interface IDeleteUserController {
-    handle(httpRequest: HttpRequest<any>): Promise<HttpResponse<User>>;
-}
+import { User } from "@/models/user"
 
 export interface IDeleteUserRepository {
-    deleteUser(id: string): Promise<User>
-}  
+  deleteUser(id: string): Promise<User>
+}

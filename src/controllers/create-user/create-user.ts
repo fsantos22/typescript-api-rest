@@ -1,21 +1,20 @@
 import { User } from "@/models/user"
-import { HttpRequest, HttpResponse } from "../protocols"
+import { HttpRequest, HttpResponse, IController } from "../protocols"
 import {
   CreateUserParams,
-  ICreateUserController,
   ICreateUserRepository,
 } from "./protocols"
 import validator from "validator"
 
-export class CreateUserController implements ICreateUserController {
+export class CreateUserController implements IController {
   constructor(private readonly createUserRepository: ICreateUserRepository) {}
-  
+
   async handle(
     httpRequest: HttpRequest<CreateUserParams>,
-    ): Promise<HttpResponse<User>> {
-      const { body } = httpRequest
-      try {
-        const requiredFields = ["firstName", "lastName", "email", "password"]
+  ): Promise<HttpResponse<User>> {
+    const { body } = httpRequest
+    try {
+      const requiredFields = ["firstName", "lastName", "email", "password"]
 
       for (const field of requiredFields) {
         if (!body?.[field as keyof CreateUserParams]?.length) {
@@ -28,10 +27,10 @@ export class CreateUserController implements ICreateUserController {
 
       const emailIsValid = validator.isEmail(body!.email)
 
-      if(!emailIsValid) {
-        return{
+      if (!emailIsValid) {
+        return {
           statusCode: 400,
-          body: "E-mail is missing"
+          body: "E-mail is missing",
         }
       }
 
